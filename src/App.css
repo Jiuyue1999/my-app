@@ -27,6 +27,12 @@
 .App-link {
   color: #61dafb;
 }
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Make the container take the full height of the viewport */
+}
 
 @keyframes App-logo-spin {
   from {
