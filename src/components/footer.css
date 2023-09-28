@@ -1,7 +1,9 @@
-.footer{
+.footer {
     position: fixed;
     bottom: 0;
-    height: 45%;
     width: 100%;
-    clip: rect(40px,2000px,260px,0px);
-}
+    background-color:#000; /* You can adjust the background color as needed */
+    padding: 10px; /* Add padding for better spacing */
+    height: 170px;
+    /* Clip is not needed in this case */
+  }

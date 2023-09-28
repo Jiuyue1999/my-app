@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-
+//import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 function PurchasePage() {
   const [productName, setProductName] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [productQuantity, setProductQuantity] = useState('');
   const [purchaseSummary, setPurchaseSummary] = useState(null);
-
+  const navigate = useNavigate();
   const handlePurchase = (e) => {
     e.preventDefault();
 
@@ -21,6 +22,11 @@ function PurchasePage() {
 
     // Set the purchase summary state
     setPurchaseSummary(summary);
+    const purchaseData = { productName, productPrice, productQuantity };
+    // Store data in session storage for persistence
+    sessionStorage.setItem('purchaseData', JSON.stringify(purchaseData));
+    // Navigate to Payment Entry page
+    navigate('/paymentEntry');
   };
 
   return (
@@ -56,7 +62,7 @@ function PurchasePage() {
           min="1"
           required
         /><br /><br />
-
+        <br /><br />
         <button type="submit">Purchase</button>
       </form>
 
@@ -64,10 +70,14 @@ function PurchasePage() {
         <div>
           <h2>Purchase Summary</h2>
           <p><strong>Product Name:</strong> {purchaseSummary.productName}</p>
+          <br /><br />
           <p><strong>Total Price:</strong> ${purchaseSummary.totalPrice.toFixed(2)}</p>
+          <br /><br />
           <p><strong>Quantity:</strong> {purchaseSummary.productQuantity}</p>
         </div>
       )}
+      <br /><br />
+
     </div>
   );
 }
