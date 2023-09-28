@@ -6,6 +6,7 @@ function PurchasePage() {
   const [productPrice, setProductPrice] = useState('');
   const [productQuantity, setProductQuantity] = useState('');
   const [purchaseSummary, setPurchaseSummary] = useState(null);
+  const [cart, setCart] = useState([]);
   const navigate = useNavigate();
   const handlePurchase = (e) => {
     e.preventDefault();
@@ -22,6 +23,12 @@ function PurchasePage() {
 
     // Set the purchase summary state
     setPurchaseSummary(summary);
+    const product = {
+      name: productName,
+      price: parseFloat(productPrice),
+      quantity: parseInt(productQuantity),
+    };
+    setCart([...cart, product]);
     const purchaseData = { productName, productPrice, productQuantity };
     // Store data in session storage for persistence
     sessionStorage.setItem('purchaseData', JSON.stringify(purchaseData));
@@ -64,6 +71,9 @@ function PurchasePage() {
         /><br /><br />
         <br /><br />
         <button type="submit">Purchase</button>
+        <button type="button" onClick={() => navigate('/cart')}>
+          Add to Cart
+        </button>
       </form>
 
       {purchaseSummary && (

@@ -1,5 +1,6 @@
 import './App.css';
 import React from "react";
+import { useState } from 'react';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Route, Routes, Navigate} from "react-router-dom";
 import PurchasePage from './components/purchase';
@@ -15,7 +16,8 @@ import Cart from './components/cart';
 
 
 function App() {
-
+  const [cart, setCart] = useState([]);
+  const [purchaseData, setPurchaseData] = useState(null);
   return (
     <div className="App">
     <Router>
@@ -24,8 +26,12 @@ function App() {
       <Routes>
       <Route path='/home' element={<Home/>} />
       <Route path='/about' element={<About/>} />
-      <Route path='/cart' element={<Cart/>} />
-      <Route path='/purchase' element={<PurchasePage/>} />
+      <Route path="/cart" element={<Cart cart={cart} />} />
+      <Route path='/purchase' element={<PurchasePage
+              cart={cart}
+              setCart={setCart}
+              setPurchaseData={setPurchaseData}
+            />} />
       <Route path='/paymentEntry' element={<PaymentEntry/>} />
       <Route path="/shipmentPage" element={<ShipmentPage />} />
       <Route path="/orderDetails" element={<OrderDetailsPage />} />
