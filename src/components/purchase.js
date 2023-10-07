@@ -1,93 +1,97 @@
-import React, { useState } from 'react';
-//import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import booksData from './books.json';
+
 function PurchasePage() {
-  const [productName, setProductName] = useState('');
-  const [productPrice, setProductPrice] = useState('');
-  const [productQuantity, setProductQuantity] = useState('');
-  const [purchaseSummary, setPurchaseSummary] = useState(null);
-  const [cart, setCart] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
-  const handlePurchase = (e) => {
-    e.preventDefault();
 
-    // Calculate the total price
-    const totalPrice = parseFloat(productPrice) * parseInt(productQuantity);
+  useEffect(() => {
+    setBooks(booksData);
+  }, []);
 
-    // Create a purchase summary object
-    const summary = {
-      productName,
-      totalPrice,
-      productQuantity,
-    };
+  const handleBookSelect = (book) => {
+    setSelectedBook(book);
+  };
 
-    // Set the purchase summary state
-    setPurchaseSummary(summary);
-    const product = {
-      name: productName,
-      price: parseFloat(productPrice),
-      quantity: parseInt(productQuantity),
-    };
-    setCart([...cart, product]);
-    const purchaseData = { productName, productPrice, productQuantity };
-    // Store data in session storage for persistence
-    sessionStorage.setItem('purchaseData', JSON.stringify(purchaseData));
-    // Navigate to Payment Entry page
-    navigate('/paymentEntry');
+  const handleQuantityChange = (e) => {
+    setQuantity(parseInt(e.target.value, 10));
+  };
+
+  const handleAddToCart = () => {
+    if (selectedBook && quantity > 0) {
+      const cartItem = {
+        book: selectedBook,
+        quantity,
+      };
+
+      const existingCart = JSON.parse(sessionStorage.getItem('shoppingCart')) || [];
+      const existingItemIndex = existingCart.findIndex((item) => item.book.id === selectedBook.id);
+
+      if (existingItemIndex !== -1) {
+        existingCart[existingItemIndex].quantity += quantity;
+      } else {
+        existingCart.push(cartItem);
+      }
+
+      sessionStorage.setItem('shoppingCart', JSON.stringify(existingCart));
+
+      setSelectedBook(null);
+      setQuantity(1);
+    } else {
+      alert('Please select a book and specify the quantity.');
+    }
+  };
+
+  const navigateToCart = () => {
+    navigate('/Cart');
+  };
+
+  const handleClearShoppingCart = () => {
+    sessionStorage.removeItem('shoppingCart');
+    alert('Shopping Cart has been cleared.');
   };
 
   return (
     <div>
       <h1>Purchase Page</h1>
-      <form onSubmit={handlePurchase}>
-        <label htmlFor="productName">Product Name:</label>
-        <input
-          type="text"
-          id="productName"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-          required
-        /><br /><br />
 
-        <label htmlFor="productPrice">Product Price:</label>
-        <input
-          type="number"
-          id="productPrice"
-          value={productPrice}
-          onChange={(e) => setProductPrice(e.target.value)}
-          min="0"
-          step="0.01"
-          required
-        /><br /><br />
+      <div className="book-list">
+        <h2>Available Books</h2>
+        <ul>
+          {books.map((book) => (
+            <li key={book.id}>
+              <button onClick={() => handleBookSelect(book)}>
+                {book.title} (${book.price.toFixed(2)})
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-        <label htmlFor="productQuantity">Number of Products:</label>
-        <input
-          type="number"
-          id="productQuantity"
-          value={productQuantity}
-          onChange={(e) => setProductQuantity(e.target.value)}
-          min="1"
-          required
-        /><br /><br />
-        <br /><br />
-        <button type="submit">Purchase</button>
-        <button type="button" onClick={() => navigate('/cart')}>
-          Add to Cart
-        </button>
-      </form>
-
-      {purchaseSummary && (
-        <div>
-          <h2>Purchase Summary</h2>
-          <p><strong>Product Name:</strong> {purchaseSummary.productName}</p>
-          <br /><br />
-          <p><strong>Total Price:</strong> ${purchaseSummary.totalPrice.toFixed(2)}</p>
-          <br /><br />
-          <p><strong>Quantity:</strong> {purchaseSummary.productQuantity}</p>
+      {selectedBook && (
+        <div className="selected-book">
+          <h2>Selected Book</h2>
+          <p>Title: {selectedBook.title}</p>
+          <p>Author: {selectedBook.author}</p>
+          <p>Price: ${selectedBook.price.toFixed(2)}</p>
+          <p>
+            Quantity:
+            <input
+              type="number"
+              value={quantity}
+              onChange={handleQuantityChange}
+              min="1"
+            />
+          </p>
+          <button onClick={handleAddToCart}>Add to Shopping Cart</button>
         </div>
       )}
-      <br /><br />
 
+      <button onClick={navigateToCart}>View Shopping Cart</button>
+      <button onClick={handleClearShoppingCart}>Clear Shopping Cart</button>
     </div>
   );
 }

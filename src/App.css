@@ -33,6 +33,10 @@
   align-items: center;
   height: 100vh; /* Make the container take the full height of the viewport */
 }
+.scroll-container {
+  max-height: 660px; /* Set the maximum height for the scrollable container */
+  overflow-y: auto; /* Add a vertical scrollbar if needed */
+}
 
 @keyframes App-logo-spin {
   from {
