@@ -9,7 +9,16 @@ function PurchasePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setBooks(booksData);
+    // Fetch data from the API endpoint
+    fetch('http://localhost:7000/get_book')
+      .then(response => response.json())
+      .then(data => {
+        // Update the books state with the fetched data
+        setBooks(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
   }, []);
 
   const handleBookSelect = (book) => {
