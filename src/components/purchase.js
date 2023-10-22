@@ -10,7 +10,7 @@ function PurchasePage() {
 
   useEffect(() => {
     // Fetch data from the API endpoint
-    fetch('http://localhost:7000/get_book')
+    fetch('https://raw.githubusercontent.com/Jiuyue1999/Database/main/books.json')
       .then(response => response.json())
       .then(data => {
         // Update the books state with the fetched data
