@@ -33,14 +33,19 @@ const create_books = "CREATE TABLE Books ( \
                         PRIMARY KEY (Id) );";
 
 // INSERT default data
-const item_add1 = "INSERT INTO Books (title, author, price, quantity) VALUES ('The Great Gatsby', 'F. Scott Fitzgerald', 12.99, 10)";
-// const item_add2 = "INSERT INTO Item (Item, quantity) VALUES ('product 2', 20)";
+const book_add1 = "INSERT INTO Books (title, author, price, quantity) VALUES ('The Great Gatsby', 'F. Scott Fitzgerald', 12.99, 10)";
+const book_add2 = "INSERT INTO Books (title, author, price, quantity) VALUES ('To Kill a Mockingbird', 'Harper Lee', 10.99, 3)";
+const book_add3 = "INSERT INTO Books (title, author, price, quantity) VALUES ('Pride and Prejudice', 'Jane Austen', 9.99, 8)";
+const book_add4 = "INSERT INTO Books (title, author, price, quantity) VALUES ('Lun Yu', 'Confucius', 19.99, 8)";
 
 // CREATE TABLE
 app.get("/create_table", function(req, res) {
     db.query(qrop_books);
     db.query(create_books);
-    db.query(item_add1);
+    db.query(book_add1);
+    db.query(book_add2);
+    db.query(book_add3);
+    db.query(book_add4);
     return res.send("created new table!")
 })
 
