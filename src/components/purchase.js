@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import booksData from './books.json';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import StepProgressBar from './StepProgressBar';
+const steps = [
+  { label: 'Purchase', status: 'active' },
+  { label: 'Cart', status: 'inactive' },
+  { label: 'Payment', status: 'inactive' },
+  { label: 'Shipping', status: 'inactive' },
+  { label: 'Checkout', status: 'inactive' },
+  { label: 'Finish', status: 'inactive' },
+];
 function PurchasePage() {
   const [books, setBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
-
   useEffect(() => {
     // Fetch data from the API endpoint
     fetch('https://raw.githubusercontent.com/Jiuyue1999/Database/main/books.json')
@@ -31,6 +38,7 @@ function PurchasePage() {
 
   const handleAddToCart = () => {
     if (selectedBook && quantity > 0) {
+
       const cartItem = {
         book: selectedBook,
         quantity,
@@ -64,43 +72,62 @@ function PurchasePage() {
   };
 
   return (
-    <div>
-      <h1>Purchase Page</h1>
+    <div className="container">
+      
+      <h1 className="mt-4">Purchase Page</h1>
+      <StepProgressBar
+        currentStep={0}
+        steps={steps}
+      />
+      <div className="row mt-4">
+        <div className="col-md-6">
+          <h2>Available Books</h2>
+          <ul className="list-group">
+            {books.map((book) => (
+              <li key={book.id} className="list-group-item">
+                <button className="btn btn-link" onClick={() => handleBookSelect(book)}>
+                  {book.title} (${book.price.toFixed(2)})
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <div className="book-list">
-        <h2>Available Books</h2>
-        <ul>
-          {books.map((book) => (
-            <li key={book.id}>
-              <button onClick={() => handleBookSelect(book)}>
-                {book.title} (${book.price.toFixed(2)})
-              </button>
-            </li>
-          ))}
-        </ul>
+        {selectedBook && (
+          <div className="col-md-6">
+            <div className="selected-book mt-4">
+              <h2>Selected Book</h2>
+              <p>Title: {selectedBook.title}</p>
+              <p>Author: {selectedBook.author}</p>
+              <p>Price: ${selectedBook.price.toFixed(2)}</p>
+              <p>
+                Quantity:
+                <input
+                  type="number"
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  min="1"
+                  className="form-control"
+                />
+              </p>
+              <button className="btn btn-primary" onClick={handleAddToCart}>Add to Shopping Cart</button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {selectedBook && (
-        <div className="selected-book">
-          <h2>Selected Book</h2>
-          <p>Title: {selectedBook.title}</p>
-          <p>Author: {selectedBook.author}</p>
-          <p>Price: ${selectedBook.price.toFixed(2)}</p>
-          <p>
-            Quantity:
-            <input
-              type="number"
-              value={quantity}
-              onChange={handleQuantityChange}
-              min="1"
-            />
-          </p>
-          <button onClick={handleAddToCart}>Add to Shopping Cart</button>
-        </div>
-      )}
-
-      <button onClick={navigateToCart}>View Shopping Cart</button>
-      <button onClick={handleClearShoppingCart}>Clear Shopping Cart</button>
+      <div className="mt-4">
+      <button
+  className="btn btn-primary"
+  onClick={() => {
+    navigateToCart();
+  }}
+>
+  View Shopping Cart
+</button>
+        <span style={{ margin: '0 10px' }}></span>
+        <button className="btn btn-danger" onClick={handleClearShoppingCart}>Clear Shopping Cart</button>
+      </div>
     </div>
   );
 }

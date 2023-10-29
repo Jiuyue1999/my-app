@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PaymentEntry from './components/paymentEntry';
 import ShipmentPage from './components/shipmentPage';
 import OrderDetailsPage from './components/orderDetails';
-
+import Finish from './components/finish';
 import SampleFooter from "./components/footer";
 import Home from './components/home';
 import About from './components/about';
@@ -32,10 +32,12 @@ function App() {
               cart={cart}
               setCart={setCart}
               setPurchaseData={setPurchaseData}
+              
             />} />
       <Route path='/paymentEntry' element={<PaymentEntry/>} />
       <Route path="/shipmentPage" element={<ShipmentPage />} />
       <Route path="/orderDetails" element={<OrderDetailsPage />} />
+      <Route path="/finish" element={<Finish />} />
       </Routes>
       </div>
       <SampleFooter />
