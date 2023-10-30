@@ -46,3 +46,10 @@
     transform: rotate(360deg);
   }
 }
+
+.image-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 35vh; /* Adjust the height as needed */
+}
