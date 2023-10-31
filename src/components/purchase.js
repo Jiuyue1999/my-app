@@ -73,7 +73,7 @@ function PurchasePage() {
 
   return (
     <div className="container">
-      
+      <div className="scrollable-content" style={{ maxHeight: '500px', overflow: 'auto' }}>
       <h1 className="mt-4">Purchase Page</h1>
       <StepProgressBar
         currentStep={0}
@@ -117,16 +117,10 @@ function PurchasePage() {
       </div>
 
       <div className="mt-4">
-      <button
-  className="btn btn-primary"
-  onClick={() => {
-    navigateToCart();
-  }}
->
-  View Shopping Cart
-</button>
+        <button className="btn btn-primary" onClick={() => {navigateToCart();}}>View Shopping Cart</button>
         <span style={{ margin: '0 10px' }}></span>
         <button className="btn btn-danger" onClick={handleClearShoppingCart}>Clear Shopping Cart</button>
+      </div>
       </div>
     </div>
   );
