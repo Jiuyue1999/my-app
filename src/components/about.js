@@ -35,8 +35,6 @@ function About() {
   return (
     <div className="container">
       <h1 className="mt-4">About Us</h1>
-
-      <div className="scrollable-content" style={{ maxHeight: '500px', overflow: 'auto' }}>
         <div className="row">
           {teamMembers.map((member, index) => (
             <div key={index} className="col-lg-4 col-md-6 col-sm-12">
@@ -54,7 +52,6 @@ function About() {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }
