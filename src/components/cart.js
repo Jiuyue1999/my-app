@@ -22,12 +22,12 @@ function Cart() {
 
   return (
     <div className="container">
+
+      <h1 className="mt-4">Shopping Cart</h1>
       <StepProgressBar
         currentStep={1}
         steps={steps}
       />
-      <h1 className="mt-4">Shopping Cart</h1>
-
       <ul className="list-group">
         {cartItems.map((item, index) => (
           <li key={index} className="list-group-item">
