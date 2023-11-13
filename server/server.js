@@ -1,8 +1,10 @@
 const express = require("express");
-const db = require('./db');
 const app = express();
 const port = 7000;
 const cors = require('cors');
+const mysql = require('mysql');
+const pool = require('./db.js');
+
 
 const corsOptions ={
     origin:'http://localhost:3000',
@@ -11,6 +13,18 @@ const corsOptions ={
 }
 
 app.use(cors(corsOptions));
+
+
+// Mysql DB connection
+pool.getConnection((err,conn) => {
+    if(err) throw err;
+    const qry = "INSERT INTO book(title, author, price, quantity) VALUES('The Little Prince', 'Antoine de Saint-Exupéry', 11.99, 7)"
+    conn.query(qry, (err,result) => {
+        conn.release();
+        if(err) throw err;
+        console.log(result);
+    });
+});
 
 // set access port
 app.use(express.json());

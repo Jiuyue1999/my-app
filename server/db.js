@@ -1,10 +1,15 @@
-var MySql = require("sync-mysql");
+const MySql = require("mysql");
 
-var connection = new MySql({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "db"
+
+const pool = MySql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'root',
+    password: 'c1255197037',
+    database: 'myapp'
+
 });
 
-module.exports = connection;
+
+
+module.exports = pool;
