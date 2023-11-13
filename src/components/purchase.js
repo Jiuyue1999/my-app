@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import StepProgressBar from './StepProgressBar';
+
 const steps = [
   { label: 'Purchase', status: 'active' },
   { label: 'Cart', status: 'inactive' },
@@ -10,18 +11,20 @@ const steps = [
   { label: 'Checkout', status: 'inactive' },
   { label: 'Finish', status: 'inactive' },
 ];
+
 function PurchasePage() {
   const [books, setBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+
   useEffect(() => {
     // Fetch data from the API endpoint
-    fetch('https://raw.githubusercontent.com/Jiuyue1999/Database/main/books.json')
+    fetch('https://iwy1snnfcb.execute-api.us-east-1.amazonaws.com/prod/products')
       .then(response => response.json())
       .then(data => {
         // Update the books state with the fetched data
-        setBooks(data);
+        setBooks(data.products);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -38,14 +41,13 @@ function PurchasePage() {
 
   const handleAddToCart = () => {
     if (selectedBook && quantity > 0) {
-
       const cartItem = {
         book: selectedBook,
         quantity,
       };
 
       const existingCart = JSON.parse(sessionStorage.getItem('shoppingCart')) || [];
-      const existingItemIndex = existingCart.findIndex((item) => item.book.id === selectedBook.id);
+      const existingItemIndex = existingCart.findIndex((item) => item.book.productId === selectedBook.productId);
 
       if (existingItemIndex !== -1) {
         existingCart[existingItemIndex].quantity += quantity;
@@ -83,9 +85,9 @@ function PurchasePage() {
           <h2>Available Books</h2>
           <ul className="list-group">
             {books.map((book) => (
-              <li key={book.id} className="list-group-item">
+              <li key={book.productId} className="list-group-item">
                 <button className="btn btn-link" onClick={() => handleBookSelect(book)}>
-                  {book.title} (${book.price.toFixed(2)})
+                  {book.title} (${Number(book.price).toFixed(2)})
                 </button>
               </li>
             ))}
@@ -98,7 +100,7 @@ function PurchasePage() {
               <h2>Selected Book</h2>
               <p>Title: {selectedBook.title}</p>
               <p>Author: {selectedBook.author}</p>
-              <p>Price: ${selectedBook.price.toFixed(2)}</p>
+              <p>Price: ${Number(selectedBook.price).toFixed(2)}</p>
               <p>
                 Quantity:
                 <input
