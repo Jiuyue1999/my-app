@@ -84,13 +84,17 @@ function PurchasePage() {
         <div className="col-md-6">
           <h2>Available Books</h2>
           <ul className="list-group">
-            {books.map((book) => (
-              <li key={book.productId} className="list-group-item">
-                <button className="btn btn-link" onClick={() => handleBookSelect(book)}>
-                  {book.title} (${Number(book.price).toFixed(2)})
-                </button>
-              </li>
-            ))}
+            {books && books.length > 0 ? (
+              books.map((book) => (
+                <li key={book.productId} className="list-group-item">
+                  <button className="btn btn-link" onClick={() => handleBookSelect(book)}>
+                    {book.title} (${Number(book.price).toFixed(2)})
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="list-group-item">No books available</li>
+            )}
           </ul>
         </div>
 
