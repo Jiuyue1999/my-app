@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import StepProgressBar from './StepProgressBar';
 
 const steps = [
@@ -17,17 +17,44 @@ function clearShoppingCart() {
 }
 
 function OrderDetailsPage() {
+  const navigate = useNavigate();
+
   // Retrieve cart data from session storage
   const cartData = JSON.parse(sessionStorage.getItem('shoppingCart')) || [];
 
   // Combine cart data with additional fields
-  const updatedPurchaseData = cartData.map((item) => ({
+  const purchaseData = cartData.map((item) => ({
     productName: item.book.title,
     productPrice: item.book.price,
     productQuantity: item.quantity,
     author: item.book.author,
   }));
 
+  // Replace '<YOUR_AWS_LAMBDA_ENDPOINT>' with your actual AWS Lambda endpoint
+  const lambdaEndpoint = 'https://wo4ibbyu1f.execute-api.us-east-1.amazonaws.com/order-detail/order-service';
+
+  useEffect(() => {
+    // Make a POST request to your AWS Lambda endpoint with the combined purchase data
+    try {
+      fetch(lambdaEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ purchaseData }),
+      }).then(async (response) => {
+        if (response.ok) {
+          console.log('Purchase data submitted successfully');
+        } else {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+      });
+    } catch (error) {
+      console.error('Error submitting purchase data:', error.message);
+    }
+  }, []); // The empty dependency array ensures the effect runs only once when the component mounts
+
+  // Retrieve other data from session storage
   const paymentData = JSON.parse(sessionStorage.getItem('paymentData')) || {
     firstName: 'Default First Name',
     lastName: 'Default Last Name',
@@ -56,12 +83,12 @@ function OrderDetailsPage() {
           <div className="card">
             <div className="card-header">Purchase Data</div>
             <div className="card-body">
-              {updatedPurchaseData.map((purchaseItem, index) => (
+              {purchaseData.map((item, index) => (
                 <div key={index}>
-                  <p>Product Name: {purchaseItem.productName}</p>
-                  <p>Author: {purchaseItem.author}</p>
-                  <p>Product Price: {purchaseItem.productPrice}</p>
-                  <p>Product Quantity: {purchaseItem.productQuantity}</p>
+                  <p>Product Name: {item.productName}</p>
+                  <p>Author: {item.author}</p>
+                  <p>Product Price: {item.productPrice}</p>
+                  <p>Product Quantity: {item.productQuantity}</p>
                 </div>
               ))}
             </div>

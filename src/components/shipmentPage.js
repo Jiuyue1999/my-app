@@ -19,13 +19,41 @@ function ShipmentPage() {
   const [state, setState] = useState('');
   const [zipCode, setZipCode] = useState('');
   const navigate = useNavigate();
-  const handleShipment = (e) => {
+  const handleShipment = async (e) => {
     e.preventDefault();
-    const shipmentData = { firstName, lastName, addressLine1, addressLine2, phoneNumber, state, zipCode };
-    // Store data in session storage for persistence
-    sessionStorage.setItem('shipmentData', JSON.stringify(shipmentData));
-    // Navigate to Order Details page
-    navigate('/orderDetails');
+
+    const shipmentData = {
+      firstName,
+      lastName,
+      addressLine1,
+      addressLine2,
+      phoneNumber,
+      state,
+      zipCode,
+    };
+    const lambdaEndpoint = 'https://h8mbgrj58h.execute-api.us-east-1.amazonaws.com/shipment/shipment-info';
+
+    try {
+      const response = await fetch(lambdaEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(shipmentData),
+      });
+
+      if (response.ok) {
+        // Shipment data sent successfully, navigate to the next page
+        console.log('Shipment data submitted successfully');
+        sessionStorage.setItem('shipmentData', JSON.stringify(shipmentData));
+        navigate('/orderDetails');  // Adjust the route based on your application structure
+      } else {
+        // Handle error scenarios
+        console.error('Error sending shipment data:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error sending shipment data:', error.message);
+    }
   };
 
   return (

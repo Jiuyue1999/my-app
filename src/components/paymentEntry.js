@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import StepProgressBar from './StepProgressBar';
+
 const steps = [
   { label: 'Purchase', status: 'inactive' },
   { label: 'Cart', status: 'inactive' },
@@ -10,6 +11,7 @@ const steps = [
   { label: 'Checkout', status: 'inactive' },
   { label: 'Finish', status: 'inactive' },
 ];
+
 function PaymentEntry() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -18,24 +20,43 @@ function PaymentEntry() {
   const [cvv, setCvv] = useState('');
   const navigate = useNavigate();
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
-    setFirstName('');
-    setLastName('');
-    setCardNumber('');
-    setExpirationDate('');
-    setCvv('');
-    const paymentData = { firstName, lastName, cardNumber, expirationDate, cvv };
-    sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
-    navigate('/shipmentPage');
+
+    const paymentData = {
+      firstName,
+      lastName,
+      cardNumber,
+      expirationDate,
+      cvv,
+    };
+
+    try {
+      // Make an HTTP POST request to your AWS Lambda function
+      const response = await fetch('https://ss4lpfjlvf.execute-api.us-east-1.amazonaws.com/payment/payment-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      if (response.ok) {
+        // Payment data sent successfully, navigate to the next page
+        sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
+        navigate('/shipmentPage');
+      } else {
+        // Handle error scenarios
+        console.error('Error sending payment data:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error sending payment data:', error.message);
+    }
   };
 
   return (
     <div className="container mt-4">
-        <StepProgressBar
-        currentStep={2} 
-        steps={steps}
-      />
+      <StepProgressBar currentStep={2} steps={steps} />
       <div className="card">
         <div className="card-header">
           <h1>Checkout</h1>
@@ -99,11 +120,15 @@ function PaymentEntry() {
                 />
               </div>
             </div>
-            <button type="submit" className="btn btn-primary btn-block" >Proceed to Shipping</button>
+            <button type="submit" className="btn btn-primary btn-block">
+              Proceed to Shipping
+            </button>
           </form>
         </div>
         <div className="card-footer">
-          <Link to="/purchase" className="btn btn-secondary">Go Back to Purchase Page</Link>
+          <Link to="/purchase" className="btn btn-secondary">
+            Go Back to Purchase Page
+          </Link>
         </div>
       </div>
     </div>
