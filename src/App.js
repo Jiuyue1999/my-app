@@ -13,7 +13,7 @@ import SampleFooter from "./components/footer";
 import Home from './components/home';
 import About from './components/about';
 import Cart from './components/cart';
-
+import SmallPage from './components/smallpage';
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -38,6 +38,7 @@ function App() {
       <Route path="/shipmentPage" element={<ShipmentPage />} />
       <Route path="/orderDetails" element={<OrderDetailsPage />} />
       <Route path="/finish" element={<Finish />} />
+      <Route path="/smallpage" element={<SmallPage />} />
       </Routes>
       </div>
       <SampleFooter />

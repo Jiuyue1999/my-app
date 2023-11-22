@@ -10,7 +10,7 @@ function NavBar() {
     <>
       <nav className="navbar">
         <div className="nav-container">
-          <NavLink exact to="/" className="nav-logo">
+          <NavLink exact to="/smallpage" className="nav-logo">
             CSE5234
             <i className="fas fa-code"></i>
           </NavLink>
